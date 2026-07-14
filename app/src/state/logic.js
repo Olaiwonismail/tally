@@ -9,17 +9,30 @@ import {
 export const BASE_GUESTS_INSIDE = 4
 // Ignore the same tag re-read within this window (camera fires many frames/sec).
 export const RESCAN_COOLDOWN_MS = 2500
+// Guest passes expire at a fixed hall curfew (24h clock), not a rolling window.
+export const GUEST_CURFEW_HOUR = 19 // 7 pm — guests must be signed out by curfew
 
 const pad = (n) => String(n).padStart(2, '0')
 const fmt = (d) => `${pad(d.getHours())}:${pad(d.getMinutes())}`
 
+// Today's curfew instant for a given moment.
+export function curfewToday(now = Date.now()) {
+  const d = new Date(now)
+  d.setHours(GUEST_CURFEW_HOUR, 0, 0, 0)
+  return d.getTime()
+}
+export const CURFEW_LABEL = `${pad(GUEST_CURFEW_HOUR)}:00`
+
 export function makeInitialState(now = Date.now()) {
+  const curfew = curfewToday(now)
   const guests = Object.entries(GUEST_REGISTRY).map(([token, g]) => ({
     token,
     name: g.name,
     visiting: g.visiting,
     room: g.room,
-    validUntil: now + g.validForMin * 60_000,
+    // Live guests are valid until tonight's curfew; the demo's expired
+    // example uses yesterday's curfew so it always reads as expired.
+    validUntil: g.expiredDemo ? curfew - 86_400_000 : curfew,
     inside: g.startInside,
   }))
   return {
@@ -37,13 +50,13 @@ export function makeInitialState(now = Date.now()) {
 
 // Build a time-limited guest pass tied to the resident being visited.
 // `host` is a REGISTRY student record (or null if the host wasn't found).
-export function makeGuestPass({ name, host }, now = Date.now(), validMin = 120) {
+export function makeGuestPass({ name, host }, now = Date.now()) {
   return {
     token: `UNILAG-GUEST-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
     name,
     visiting: host ? host.name : 'unknown host',
     room: host && host.allocation ? host.allocation.room : '—',
-    validUntil: now + validMin * 60_000,
+    validUntil: curfewToday(now), // expires at tonight's curfew
     inside: false,
   }
 }

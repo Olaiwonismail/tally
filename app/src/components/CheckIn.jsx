@@ -79,7 +79,7 @@ export default function CheckIn() {
           {error && <p className="err">{error}</p>}
           <button className="btn" disabled={busy}>{busy ? 'Checking…' : 'Check in as guest'}</button>
           <p className="note" style={{ marginTop: 14 }}>
-            Your pass is time-limited and tied to your host, and expires automatically.
+            Your pass is tied to your host and expires at the 19:00 (7 pm) curfew.
           </p>
         </form>
       )}

@@ -7,7 +7,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
-  reducer, makeInitialState, deriveCounts, makeGuestPass,
+  reducer, makeInitialState, deriveCounts, makeGuestPass, curfewToday, CURFEW_LABEL,
 } from '../app/src/state/logic.js'
 import { REGISTRY, HALL } from '../app/src/data/seed.js'
 
@@ -76,6 +76,9 @@ app.post('/api/guest', (req, res) => {
   const host = REGISTRY[`UNILAG-STU-${hostMatric}`]
   if (!host || !host.allocation || host.allocation.hall !== HALL.name) {
     return res.status(400).json({ ok: false, error: `No resident with matric ${hostMatric} in ${HALL.name}.` })
+  }
+  if (Date.now() >= curfewToday()) {
+    return res.status(400).json({ ok: false, error: `Guest entry is closed for tonight — the ${CURFEW_LABEL} curfew has passed.` })
   }
   const guest = makeGuestPass({ name, host })
   state = reducer(state, { type: 'ADD_GUEST', guest })

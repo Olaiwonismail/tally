@@ -29,11 +29,12 @@ export const REGISTRY = {
   'UNILAG-STU-200409004': { name: 'Emeka Obi',       matric: '200409004', allocation: null },
 }
 
-// Guest passes — time-limited, tied to who is being visited.
-// validUntil is minutes-from-load so the demo always has a live + an expired one.
+// Guest passes — tied to who is being visited, valid until the hall curfew
+// (see GUEST_CURFEW_HOUR in logic.js). One live and one already-expired so the
+// demo dashboard always shows both states.
 export const GUEST_REGISTRY = {
-  'UNILAG-GUEST-4471': { name: 'Tolu Adeyemi',  visiting: 'Funke Balogun', room: 'C-102', validForMin: 42, startInside: true },
-  'UNILAG-GUEST-4490': { name: 'Sade Johnson',  visiting: 'Chioma Nwosu',  room: 'A-101', validForMin: -8, startInside: false }, // already expired
+  'UNILAG-GUEST-4471': { name: 'Tolu Adeyemi',  visiting: 'Funke Balogun', room: 'C-102', startInside: true,  expiredDemo: false },
+  'UNILAG-GUEST-4490': { name: 'Sade Johnson',  visiting: 'Chioma Nwosu',  room: 'A-101', startInside: false, expiredDemo: true },
 }
 
 // Tracked residents inside at start (added on top of BASE_INSIDE).
@@ -56,13 +57,14 @@ export const NO_SHOW_BEDS = [
 
 export const DENIED_TODAY_START = 6
 
-// Opening access log (most recent first).
+// Opening access log (most recent first). Times sit before the 19:00 curfew
+// so the seeded history is consistent with the guest pass expiries.
 export const INITIAL_LOG = [
-  { time: '21:47', name: 'Adaobi Okafor', dir: 'In',  result: 'Allowed',        tone: 'ok' },
-  { time: '21:44', name: 'Tolu Adeyemi',  dir: 'In',  result: 'Guest · exp 22:00', tone: 'guest' },
-  { time: '21:41', name: 'Chidi Eze',     dir: '—',   result: 'Denied',         tone: 'bad' },
-  { time: '21:38', name: 'Funke Balogun', dir: 'Out', result: 'Allowed',        tone: 'ok' },
-  { time: '21:32', name: 'Ngozi Umeh',    dir: 'In',  result: 'Allowed',        tone: 'ok' },
+  { time: '16:47', name: 'Adaobi Okafor', dir: 'In',  result: 'Allowed',        tone: 'ok' },
+  { time: '16:44', name: 'Tolu Adeyemi',  dir: 'In',  result: 'Guest · exp 19:00', tone: 'guest' },
+  { time: '16:41', name: 'Chidi Eze',     dir: '—',   result: 'Denied',         tone: 'bad' },
+  { time: '16:38', name: 'Funke Balogun', dir: 'Out', result: 'Allowed',        tone: 'ok' },
+  { time: '16:32', name: 'Ngozi Umeh',    dir: 'In',  result: 'Allowed',        tone: 'ok' },
 ]
 
 // Tokens the "Simulate scan" buttons and the test-QR panel use.
