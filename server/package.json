@@ -1,0 +1,13 @@
+{
+  "name": "tally-hostel-server",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Shared-state API + SSE for the hostel check-in demo; serves the built app.",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

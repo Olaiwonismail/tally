@@ -1,0 +1,23 @@
+{
+  "name": "tally-hostel-access",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "UNILAG Hostel Access & Occupancy — Registry theme demo",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource/public-sans": "^5.1.0",
+    "jsqr": "^1.4.0",
+    "qrcode": "^1.5.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}
