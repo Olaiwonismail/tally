@@ -17,8 +17,14 @@ export default function GateDisplay() {
     }).catch(() => setHost({ port: 4000, addresses: [] }))
   }, [])
 
+  // Prefer the URL the dashboard itself was opened from — on a hosted deploy
+  // (e.g. Render) that's the public URL a phone can actually reach. Only fall
+  // back to the server's LAN address when the dashboard is viewed on the host
+  // machine itself (localhost), whose origin a phone couldn't open.
+  const onLocalhost = /^(localhost|127\.|0\.0\.0\.0$)/.test(window.location.hostname)
   const port = host?.port || 4000
-  const url = `http://${addr || 'localhost'}:${port}/#/checkin`
+  const lanUrl = `http://${addr || 'localhost'}:${port}/#/checkin`
+  const url = onLocalhost ? lanUrl : `${window.location.origin}/#/checkin`
 
   useEffect(() => {
     QRCode.toDataURL(url, { margin: 1, width: 520, errorCorrectionLevel: 'M' })
@@ -37,7 +43,7 @@ export default function GateDisplay() {
       <div className="gate-grid">
         <div className="gate-qr">
           {qr ? <img src={qr} alt="Gate check-in QR code" /> : <div className="qr-skeleton" />}
-          <div className="gate-url">{url.replace(/^http:\/\//, '')}</div>
+          <div className="gate-url">{url.replace(/^https?:\/\//, '')}</div>
           {host?.addresses?.length > 1 && (
             <label className="addr-pick">
               Phone can’t open it? Try another address:
