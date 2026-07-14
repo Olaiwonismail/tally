@@ -1,0 +1,13 @@
+{
+  "name": "tally-hostel-access-deploy",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Deploy orchestration: build the React front-end, then run the shared-state Express server that serves it.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "npm --prefix app ci && npm --prefix app run build && npm --prefix server ci",
+    "start": "npm --prefix server start"
+  }
+}

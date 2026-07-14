@@ -1,0 +1,13 @@
+# Render Blueprint — one persistent Node web service.
+# Builds the front-end (app/dist) and runs the Express server that serves it
+# plus the shared-state API and live SSE stream.
+services:
+  - type: web
+    name: tally-hostel-access
+    runtime: node
+    plan: free
+    buildCommand: npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
